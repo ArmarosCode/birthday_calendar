@@ -5,7 +5,7 @@ var hljs = require('highlight.js');
 // Get the filename, page title, and plausible domain from command-line arguments
 let filename = process.argv[4] || "README.md";  // Default to "README.md" if not provided
 let pageTitle = process.argv[2] || "";  // Page title from arguments (default is empty)
-let plausibleDomain = process.argv[3] || "";  // Plausible domain from arguments (default is empty)
+let trackingScript = process.argv[3] || "";  // Tracking script from arguments (default is empty)
 
 // Create a custom extension for syntax highlighting in showdown
 showdown.extension('highlight', function () {
@@ -61,6 +61,16 @@ fs.readFile(__dirname + '/style.css', function (err, styleData) {
         tables: true  // Enable support for tables in Markdown
       });
 
+      // Read trackingScript if specified
+      let trackingScriptContent = "";
+      if (trackingScript.length > 0) {
+        try {
+          trackingScriptContent = fs.readFileSync(process.cwd() + '/' + trackingScript, 'utf8');
+        } catch (e) {
+          console.error("Reading error " + trackingScript + ": " + e.message);
+        }
+      }
+
       // HTML structure for the page, including meta tags and scripts
       var preContent = `
       <html>
@@ -69,11 +79,10 @@ fs.readFile(__dirname + '/style.css', function (err, styleData) {
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <meta charset="UTF-8">`
 
-      if (plausibleDomain.length > 0) {
-        // Add Plausible Analytics script if a domain is provided
-        preContent += `
-          <script defer data-domain="` + plausibleDomain + `" src="https://plausible.io/js/script.js"></script>
-        `
+      if (trackingScript.length > 0) {
+        // Add analytics script
+        preContent +=
+          trackingScriptContent;
       }
 
       preContent += `

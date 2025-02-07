@@ -1,0 +1,5 @@
+npm install
+node generate.js -mt "Birthday Calendar" -mts "tracking.html" privacy_policy.md -t "Privacy Policy" terms_and_conditions.md -t "Terms and Conditions" README.md -t "Project README"
+
+
+?inspectlet_diagnostics=true
